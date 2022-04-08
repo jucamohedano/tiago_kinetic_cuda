@@ -3,11 +3,7 @@ ARG CUDA_PREFIX_VERSION=11.3
 
 # Preamble from extension [nvidia]
 FROM nvidia/opengl:1.0-glvnd-devel-ubuntu16.04 as glvnd
-
 FROM nvidia/cuda:${CUDA_VER}-cudnn8-devel-ubuntu16.04
-# FROM nvidia/opengl:1.0-glvnd-devel-ubuntu18.04 AS glvnd
-# FROM osrf/ros:melodic-desktop-full
-# FROM tensorflow/tensorflow:1.8.0-gpu
 
 USER root
 
@@ -31,6 +27,7 @@ ENV LD_LIBRARY_PATH /usr/local/lib/x86_64-linux-gnu:/usr/local/lib/i386-linux-gn
 
 COPY --from=glvnd /usr/local/share/glvnd/egl_vendor.d/10_nvidia.json /usr/local/share/glvnd/egl_vendor.d/10_nvidia.json
 
+# not sure if these two lines are needed anymore
 ARG DEBIAN_FRONTEND=noninteractive
 RUN dpkg-reconfigure locales
 
@@ -52,6 +49,7 @@ RUN rosdep init \
  && rosdep update
 RUN echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
 
+# audio stuff
 RUN apt-get update && apt-get install -y alsa-base pulseaudio
 
 ARG TIAGO_USER
@@ -67,38 +65,27 @@ COPY pythonr /usr/bin/pythonr
 RUN chown root.root /usr/bin/pythonr
 RUN chmod 777 /usr/bin/pythonr
 
+
+# set up ROS environment
 RUN mkdir -p /opt/tiago_public_ws
 WORKDIR /opt/tiago_public_ws
 RUN wget https://raw.githubusercontent.com/pal-robotics/tiago_tutorials/kinetic-devel/tiago_public.rosinstall
 RUN rosinstall src /opt/ros/kinetic tiago_public.rosinstall
-
 RUN rm -f /etc/ros/rosdep/sources.list.d/20-default.list
-# RUN rosdep init
-# RUN rosdep update
-# ARG ROSDEP_IGNORE="opencv2 opencv2-nonfree pal_laser_filters speed_limit_node sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup slam_toolbox joint_impedance_trajectory_controller cartesian_impedance_controller omni_base_description omni_drive_controller mynteye_description stockbot_description" -y
-# ARG ROSDEP_IGNORE="opencv2 opencv2-nonfree pal_laser_filters speed_limit_node sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup opencv3 joint_impedance_trajectory_controller urdf_test uvc_camera range_sensor_layer teb_local_planner pointcloud_to_laserscan octomap_server spatio_temporal_voxel_layer openni2_launch moveit_ros_visualization slam_toolbox sick_tim libuvc_camera" -y
-# RUN rosdep install --from-paths src --ignore-src --rosdistro kinetic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit_node sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup opencv3 joint_impedance_trajectory_controller urdf_test uvc_camera range_sensor_layer teb_local_planner pointcloud_to_laserscan octomap_server spatio_temporal_voxel_layer openni2_launch moveit_ros_visualization slam_toolbox sick_tim libuvc_camera mynteye_description stockbot_description" -y
+
+
 RUN rosdep init
 RUN rosdep update --include-eol-distros
 RUN rosdep install --from-paths src --ignore-src --rosdistro kinetic --skip-keys="opencv2 opencv2-nonfree pal_laser_filters speed_limit_node sensor_to_cloud hokuyo_node libdw-dev python-graphitesend-pip python-statsd pal_filters pal_vo_server pal_usb_utils pal_pcl pal_pcl_points_throttle_and_filter pal_karto pal_local_joint_control camera_calibration_files pal_startup_msgs pal-orbbec-openni2 dummy_actuators_manager pal_local_planner gravity_compensation_controller current_limit_controller dynamic_footprint dynamixel_cpp tf_lookup opencv3 joint_impedance_trajectory_controller urdf_test uvc_camera range_sensor_layer teb_local_planner pointcloud_to_laserscan octomap_server spatio_temporal_voxel_layer openni2_launch moveit_ros_visualization slam_toolbox sick_tim libuvc_camera mynteye_description stockbot_description" -y
-# install python3.7
 RUN apt-get install -y zip unzip
-# ADD basic_requirements.txt /
+
 WORKDIR /
-# RUN apt-get install -y software-properties-common
-# RUN apt-get update
-# RUN add-apt-repository ppa:deadsnakes/ppa
-# RUN apt-get update
-# RUN apt-get install -y python3.7
-# RUN apt-get install -y --no-install-recommends python3-rosdep
 RUN apt-get install -y python-pip && python -m pip install pip==18.1
-# RUN python3.7 -m pip install --upgrade pip
-# RUN python3.7 -m pip install rospkg catkin_pkg empty empy stable-baselines
 RUN python2.7 -m pip install rospkg future torch torchvision
 
 WORKDIR /opt/tiago_public_ws
 RUN apt-get update
-RUN apt-get install ros-kinetic-catkin python-catkin-tools python-pip sudo ros-kinetic-ros-numpy ros-kinetic-moveit-ros-visualization ros-kinetic-teb-local-planner -y
+RUN apt-get install ros-kinetic-catkin python-catkin-tools python-pip sudo ros-kinetic-ros-numpy ros-kinetic-moveit-ros-visualization -y
 RUN source /opt/ros/kinetic/setup.bash; catkin build -DCATKIN_ENABLE_TESTING=0
 
 #update cuda paths
