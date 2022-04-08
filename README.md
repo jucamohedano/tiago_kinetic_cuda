@@ -1,5 +1,7 @@
 # TIAGO-DOCKER
 
+Template of this repository from https://github.com/okabedev/tiago-docker/tree/kinetic
+
 ROS Version: **Melodic**
 
 A docker-compose project with the latest TIAGO Public simulation http://wiki.ros.org/Robots/TIAGo/Tutorials/Installation/TiagoSimulation.
