@@ -35,8 +35,8 @@ For the NVIDIA option this has been tested on the following systems using NVIDIA
 **Don't forget** to replace `<tiago_docker-path>` with the location of where you clone this repository. (The `<tiago_docker-path>` must be a valid absolute path, if you don't know this path, run `pwd` command to show.)
 
 ```
-export TIAGO_DOCKER_ROOT=<tiago_docker-path>
-export PATH=$PATH:$TIAGO_DOCKER_ROOT/bin
+export TIAGO_DOCKER_ROOT_KINETIC_CUDA=<tiago_docker-path>
+export PATH=$PATH:$TIAGO_DOCKER_ROOT_KINETIC_CUDA/bin
 ```
 Then run `source ~/.bashrc` to make the above changes take effect.
 
