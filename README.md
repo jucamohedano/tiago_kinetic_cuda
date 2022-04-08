@@ -42,17 +42,17 @@ export PATH=$PATH:$TIAGO_DOCKER_ROOT_KINETIC_CUDA/bin
 ```
 Then run `source ~/.bashrc` to make the above changes take effect.
 
-5\. Run `tiago_up` to start the container.
+5\. Run `tiago_kinetic_cuda_up` to start the container.
 
-6\. Run `tiago_bash` to open a new terminal.
+6\. Run `tiago_kinetic_cuda_bash` to open a new terminal.
 
-7\. When you want to stop the container, please run `tiago_stop`.
+7\. When you want to stop the container, please run `tiago_kinetic_cuda_stop`.
 
 ## A Quick demo
 
-1\. Run `tiago_up`
+1\. Run `tiago_kinetic_cuda_up`
 
-2\. Run `tiago_bash` , then you will enter a internal shell of the container. You can see a **TIAGO** alert in the left side.
+2\. Run `tiago_kinetic_cuda_bash` , then you will enter a internal shell of the container. You can see a **TIAGO** alert in the left side.
 
 3\. Execute `roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true robot:=titanium world:=simple_office_with_people`  **inside the container shell**. Gazebo will show up with TIAGO in the following world.
 ![Screenshot from 2021-03-10 18-35-10.png](https://i.loli.net/2021/03/11/zlb8stkyVwmdMNW.png)
