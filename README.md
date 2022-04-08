@@ -59,7 +59,7 @@ Then run `source ~/.bashrc` to make the above changes take effect.
 
 
 
-4\. Open a new local terminal then run `tiago_bash`. Then execute `rosrun key_teleop key_teleop.py` **inside** the container shell.
+4\. Open a new local terminal then run `tiago_kinetic_cuda_bash`. Then execute `rosrun key_teleop key_teleop.py` **inside** the container shell.
 
 5\. Now you can control TIAGO by using your keyboard.
 
